@@ -1,0 +1,42 @@
+pipeline {
+    agent {
+        label 'SLAVE-1'
+    }
+    stages {
+        stage ('slave-1') {
+         steps {
+             sh '''
+             sudo yum install git -y
+             sudo yum install docker -y
+             sudo systemctl start docker
+             '''
+         }
+    }
+        
+    stage ('on S2') {
+    agent {
+        label 'SLAVE-2'
+    }
+         steps {
+             sh '''
+             sudo yum install git -y
+             sudo yum install docker -y
+             sudo systemctl start docker
+             '''
+         }
+    }
+        stage ('on S3') {
+    agent {
+        label 'SLAVE-3'
+    }
+         steps {
+             sh '''
+             sudo yum install git -y
+             sudo yum install docker -y
+             sudo systemctl start docker
+             '''
+         }
+    } 
+
+    }
+}
