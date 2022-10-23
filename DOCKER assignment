@@ -1,0 +1,66 @@
+pipeline {
+    agent
+    {
+        label{
+            label 'SLAVE-1'
+            customWorkspace '/mnt/repo'
+        }
+    }
+    stages {
+        stage ('stage-1')
+        {
+            steps {
+            sh '''
+            sudo rm -rf *
+            sudo git clone https://github.com/ssahuji9595/assignment1
+            cd assignment1
+            sudo git checkout Q1
+            sudo docker run -itdp 80:80 --name abhi1 httpd
+            sudo chmod 777 index.html
+            sudo docker cp index.html abhi1:/usr/local/apache2/htdocs  
+            '''
+            }
+        }
+        stage ('on s2') {
+             agent
+    {
+        label{
+            label 'SLAVE-2'
+            customWorkspace '/mnt/repo'
+        }
+    }
+            steps {
+            sh '''
+            sudo rm -rf *
+            sudo git clone https://github.com/ssahuji9595/assignment1
+            cd assignment1
+            sudo git checkout Q2
+            sudo docker run -itdp 90:80 --name abhi2 httpd
+            sudo chmod 777 index.html
+            sudo docker cp index.html abhi2:/usr/local/apache2/htdocs  
+            '''
+            }
+    }
+          
+stage ('on s3') {
+             agent
+    {
+        label{
+            label 'SLAVE-3'
+            customWorkspace '/mnt/repo'
+        }
+    }
+            steps {
+            sh '''
+            sudo rm -rf *
+            sudo git clone https://github.com/ssahuji9595/assignment1
+            cd assignment1
+            sudo git checkout Q3
+            sudo docker run -itdp 8081:80 --name abhi3 httpd
+            sudo chmod 777 index.html
+            sudo docker cp index.html abhi3:/usr/local/apache2/htdocs  
+            '''
+            }
+    }
+    }
+}
